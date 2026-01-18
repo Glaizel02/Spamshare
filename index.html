@@ -1,37 +1,180 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>FB Share Booster</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FB Share Booster | Glass Edition</title>
     <style>
-        body { background: #512da8; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: #121212; padding: 25px; border-radius: 12px; width: 320px; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .title { font-size: 20px; font-weight: bold; margin-bottom: 20px; text-align: center; }
-        input { width: 100%; padding: 10px; margin: 8px 0; background: #222; border: 1px solid #444; color: white; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #673ab7; border: none; color: white; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        :root {
+            --primary-blue: #2563eb;
+            --dark-blue: #1d4ed8;
+            --glass-bg: rgba(255, 255, 255, 0.7); 
+            --glass-border: rgba(255, 255, 255, 0.4);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            /* Smooth Blue Gradient Background */
+            background: linear-gradient(-45deg, #eff6ff, #dbeafe, #bfdbfe, #eff6ff);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glass-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 40px;
+            width: 100%;
+            max-width: 360px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #1e293b;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+            padding-left: 4px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.8);
+            box-sizing: border-box;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+            color: #1e293b;
+        }
+
+        input:focus {
+            background: white;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: var(--dark-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -5px rgba(37, 99, 235, 0.4);
+        }
+
+        #status-msg {
+            margin-top: 25px;
+            font-size: 11px;
+            font-weight: 800;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="title">FB Share Booster</div>
-        <input type="text" id="cookie" placeholder="Facebook Cookie">
-        <input type="text" id="link" placeholder="Post Link">
-        <input type="number" id="limit" placeholder="Limit">
-        <button onclick="run()">Share Now</button>
-        <p id="msg" style="font-size: 10px; color: #888; text-align: center;"></p>
+
+    <div class="glass-container">
+        <h2>FB Booster</h2>
+        
+        <div class="input-group">
+            <label>Cookie</label>
+            <input type="text" id="cookie" placeholder="Paste FB Cookie">
+        </div>
+
+        <div class="input-group">
+            <label>Post URL</label>
+            <input type="text" id="link" placeholder="Paste Post Link">
+        </div>
+
+        <div class="input-group">
+            <label>Shares</label>
+            <input type="number" id="limit" value="100">
+        </div>
+
+        <button onclick="runScript()">START BOOSTING</button>
+
+        <div id="status-msg">Ready for deployment</div>
     </div>
+
     <script>
-        async function run() {
-            document.getElementById('msg').innerText = "Starting Script...";
-            await fetch('/start', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    cookie: document.getElementById('cookie').value,
-                    link: document.getElementById('link').value,
-                    limit: document.getElementById('limit').value
-                })
-            });
-            document.getElementById('msg').innerText = "Running in background!";
+        async function runScript() {
+            const status = document.getElementById('status-msg');
+            const data = {
+                cookie: document.getElementById('cookie').value,
+                link: document.getElementById('link').value,
+                limit: document.getElementById('limit').value
+            };
+
+            if (!data.cookie || !data.link || !data.limit) {
+                status.style.color = "#ef4444";
+                status.innerText = "Error: Fields Required";
+                return;
+            }
+
+            status.style.color = "#2563eb";
+            status.innerText = "Sending to Server...";
+
+            try {
+                const response = await fetch('/start', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                status.innerText = result.status;
+            } catch (err) {
+                status.style.color = "#ef4444";
+                status.innerText = "Connection Failed";
+            }
         }
     </script>
 </body>
