@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FB Share Booster</title>
+    <style>
+        body { background: #512da8; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #121212; padding: 25px; border-radius: 12px; width: 320px; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .title { font-size: 20px; font-weight: bold; margin-bottom: 20px; text-align: center; }
+        input { width: 100%; padding: 10px; margin: 8px 0; background: #222; border: 1px solid #444; color: white; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #673ab7; border: none; color: white; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="title">FB Share Booster</div>
+        <input type="text" id="cookie" placeholder="Facebook Cookie">
+        <input type="text" id="link" placeholder="Post Link">
+        <input type="number" id="limit" placeholder="Limit">
+        <button onclick="run()">Share Now</button>
+        <p id="msg" style="font-size: 10px; color: #888; text-align: center;"></p>
+    </div>
+    <script>
+        async function run() {
+            document.getElementById('msg').innerText = "Starting Script...";
+            await fetch('/start', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    cookie: document.getElementById('cookie').value,
+                    link: document.getElementById('link').value,
+                    limit: document.getElementById('limit').value
+                })
+            });
+            document.getElementById('msg').innerText = "Running in background!";
+        }
+    </script>
+</body>
+</html>
